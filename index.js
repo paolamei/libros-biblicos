@@ -8,6 +8,7 @@ let librosBiblicos = [
     {id: 1 , nombre: 'Genesis', autor: 'Moises', anioPublicacion: 2020},
     {id: 2 , nombre: 'Exodo', autor: 'Moises', anioPublicacion: 2024},
     {id: 3 , nombre: 'Levitico', autor: 'Moises', anioPublicacion: 1990},
+    {id: 4 , nombre: 'Juan', autor: 'Juan', anioPublicacion: 1980},
 ];
 //manejo de JSON
 app.use(express.json());
@@ -41,7 +42,7 @@ app.put('/actualizar-libro/:id', (req, res) => {
         librosBiblicos[indexLibroLocalizado] = req.body;
         res.json(librosBiblicos[indexLibroLocalizado]);
     } else {
-        res.status(404).json({mensaje : 'Libro no encontrado'});
+       res.status(404).json({mensaje : 'Libro no encontrado'});
     }
 });
 // endpoint 5 Eliminar Libro
@@ -60,6 +61,40 @@ app.get('/libros/publicacion/:anio', (req, res) => {
     } else {
         res.status(404).json({mensaje : 'no se han encontrado libros publicados en ese anio'});
     }
+});
+//endopoint 7 Bienvenida
+app.get('/Bienvenida', (req, res) => {
+    res.send('Bienvenid@, Mi nombre es Paola Nina Flores TecSup en Sistemas Informaticos');
+  });
+//endopoint 8 libros por autor 
+app.get('/autores/:autor', (req, res) => {
+    const libautor =  req.params.autor;
+    const librosAutor = librosBiblicos.filter( x => x.autor === libautor);
+    if (librosAutor.length > 0) {
+        res.json(librosAutor);
+    } else {
+        res.status(404).json({mensaje : 'no se han encontrado libros para el autor'});
+    }
+});
+//endpoint 9 obtener cantidad total de libros
+app.get('/total-libros', (req, res) => {
+    const totalLibros = librosBiblicos.length;
+    res.send(`La cantidad total de libros es: ${totalLibros}`);
+});
+// endpoint 10 libros por nombre que contenga el texto "Juan"
+app.get('/nombre-libro/:nombre', (req, res) => {
+    const name =  req.params.nombre;
+    const librosPublicados = librosBiblicos.filter( x => x.nombre === name);
+    if (librosPublicados.length > 0) {
+        res.json(librosPublicados);
+    } else {
+        res.status(404).json({mensaje : 'no se han encontrado el libro'});
+    }
+});
+// endpoint 11 Ordenar libros por nombre
+app.get('/libros-ordenados-nombre', (req, res) => {
+    const ordenado = librosBiblicos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    res.json(ordenado);
 });
 
 app.listen(PORT, () => {
